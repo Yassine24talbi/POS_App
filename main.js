@@ -17,7 +17,7 @@ function createWindow () {
   });
 
   // Load your app's main HTML file (adjust path as needed)
-  win.loadURL('http://localhost:3000')?.then(() => {
+  win.loadURL('https://pos-app-qdtr.onrender.com')?.then(() => {
     console.log('Window loaded successfully');
   }).catch((err) => {
     win.loadFile(path.join(__dirname, 'servererr.html'))

@@ -30,7 +30,7 @@ app.use('/chef', express.static(path.join(__dirname, 'public/chef')));
 app.use('/waiter', express.static(path.join(__dirname, 'public/waiter')));
 
 // MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/pos_app';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 mongoose.connect(MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
