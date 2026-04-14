@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Server Error</title>
+    <style>
+        body {
+            background: #000;
+            color: #721c24;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #fff;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            padding: 32px 48px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 16px;
+            font-size: 2em;
+        }
+        p {
+            margin-bottom: 24px;
+            font-size: 1.1em;
+        }
+        button {
+            background: #721c24;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #a71d2a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Server Error</h1>
+        <p>The server at port 3000 is not running properly.<br>
+        Please close this window and try again later.</p>
+        <button onclick="window.close()">Close Window</button>
+    </div>
+</body>
+</html>

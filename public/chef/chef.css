@@ -1,0 +1,407 @@
+/* Chef/Kitchen Display Styles - Dark Theme for Kitchen */
+
+.chef-body {
+  background: #0f0f0f;
+  min-height: 100vh;
+  color: #ffffff;
+}
+
+.chef-header {
+  background: #1a1a1a;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #2a2a2a;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.chef-header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.current-time {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+  font-family: monospace;
+}
+
+.user-name {
+  color: #888;
+}
+
+/* Stats Bar */
+.stats-bar {
+  display: flex;
+  gap: 1rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  min-width: 80px;
+}
+
+.stat.pending {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid #ef4444;
+}
+
+.stat.preparing {
+  background: rgba(234, 179, 8, 0.2);
+  border: 1px solid #eab308;
+}
+
+.stat.completed {
+  background: rgba(34, 197, 94, 0.2);
+  border: 1px solid #22c55e;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.stat.pending .stat-value { color: #ef4444; }
+.stat.preparing .stat-value { color: #eab308; }
+.stat.completed .stat-value { color: #22c55e; }
+
+/* Main Layout */
+.kitchen-main {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 1rem;
+  padding: 1rem;
+  height: calc(100vh - 80px);
+}
+
+.orders-section {
+  overflow-y: auto;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0 0.5rem;
+}
+
+.section-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* Orders Grid */
+.orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+/* Order Card */
+.order-card {
+  background: #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #2a2a2a;
+  transition: border-color 0.3s;
+}
+
+.order-card.pending {
+  border-color: #ef4444;
+}
+
+.order-card.preparing {
+  border-color: #eab308;
+}
+
+.order-card-header {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-card.pending .order-card-header {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.order-card.preparing .order-card-header {
+  background: rgba(234, 179, 8, 0.2);
+}
+
+.order-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.order-card.pending .order-number { color: #ef4444; }
+.order-card.preparing .order-number { color: #eab308; }
+
+.order-meta {
+  text-align: right;
+}
+
+.order-table {
+  font-size: 0.875rem;
+  color: #888;
+}
+
+.order-time {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  font-family: monospace;
+}
+
+.order-elapsed {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  margin-top: 0.25rem;
+  display: inline-block;
+}
+
+.elapsed-normal {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.elapsed-warning {
+  background: rgba(234, 179, 8, 0.2);
+  color: #eab308;
+}
+
+.elapsed-danger {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.order-card-body {
+  padding: 1rem;
+}
+
+.order-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+}
+
+.item-qty {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  min-width: 40px;
+}
+
+.item-name {
+  flex: 1;
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+.item-notes {
+  font-size: 0.75rem;
+  color: #eab308;
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+.order-notes {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(234, 179, 8, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid #eab308;
+}
+
+.order-notes-label {
+  font-size: 0.75rem;
+  color: #eab308;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.order-notes-text {
+  font-size: 0.875rem;
+  color: #ffffff;
+}
+
+.order-card-footer {
+  padding: 1rem;
+  background: #0f0f0f;
+}
+
+.order-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.order-actions .btn {
+  flex: 1;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.btn-preparing {
+  background: #eab308;
+  color: #000000;
+}
+
+.btn-preparing:hover {
+  background: #ca8a04;
+}
+
+.btn-ready {
+  background: #22c55e;
+  color: #ffffff;
+}
+
+.btn-ready:hover {
+  background: #16a34a;
+}
+
+/* Completed Section */
+.completed-section {
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.completed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.completed-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: #0f0f0f;
+  border-radius: 8px;
+  border-left: 3px solid #22c55e;
+}
+
+.completed-order-number {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.completed-time {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.empty-state-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.empty-state-text {
+  font-size: 1.25rem;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.order-card.pending {
+  animation: pulse 2s infinite;
+}
+
+.order-card.preparing {
+  animation: none;
+}
+
+/* New Order Flash */
+@keyframes flash {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0.3; }
+}
+
+.order-card.new-order {
+  animation: flash 0.5s ease-in-out 3;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .kitchen-main {
+    grid-template-columns: 1fr;
+  }
+  
+  .completed-section {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .chef-header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .header-left {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .orders-grid {
+    grid-template-columns: 1fr;
+  }
+}

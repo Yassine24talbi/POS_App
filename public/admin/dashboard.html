@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - POS System</title>
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="admin.css">
+  <link rel="icon" href="../iconApp.png" type="image/x-icon">
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <span class="closemenu" onclick="closemenu()">X</span>
+    <div class="sidebar-header">
+      <span class="sidebar-logo">POS Admin</span>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <a href="#dashboard" class="nav-item active" data-section="dashboard">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+        Dashboard
+      </a>
+      
+      <a href="#users" class="nav-item" data-section="users">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        Users
+      </a>
+      
+      <a href="#categories" class="nav-item" data-section="categories">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+        </svg>
+        Categories
+      </a>
+      
+      <a href="#products" class="nav-item" data-section="products">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+        </svg>
+        Products
+      </a>
+      
+      <a href="#promo-codes" class="nav-item" data-section="promo-codes">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+        </svg>
+        Promo Codes
+      </a>
+      
+      <a href="#orders" class="nav-item" data-section="orders">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+        </svg>
+        Orders
+      </a>
+      
+      <a href="#reports" class="nav-item" data-section="reports">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+        Reports
+      </a>
+    </nav>
+    
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">A</div>
+        <div class="user-details">
+          <span class="user-name" id="userName">Admin</span>
+          <span class="user-role">Administrator</span>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm w-full mt-2" onclick="logout()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        </svg>
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+      <button class="btn btn-ghost btn-icon" onclick="toggleSidebar()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+      <span class="mobile-title">POS Admin</span>
+    </div>
+
+    <!-- Dashboard Section -->
+    <section id="dashboardSection" class="section active">
+      <div class="page-header">
+        <h1 class="page-title">Dashboard</h1>
+        <span class="text-muted" id="currentDate"></span>
+      </div>
+      
+      <div class="page-content">
+        <!-- Stats Grid -->
+        <div class="grid grid-4 mb-4">
+          <div class="stat-card">
+            <div class="stat-label">Today's Sales</div>
+            <div class="stat-value" id="todaySales">0.00 DH</div>
+            <div class="stat-change positive" id="todayOrders">0 orders</div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-label">This Week</div>
+            <div class="stat-value" id="weekSales">0.00 DH</div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-label">This Month</div>
+            <div class="stat-value" id="monthSales">0.00 DH</div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-label">Total Products</div>
+            <div class="stat-value" id="productCount">0</div>
+          </div>
+        </div>
+
+        <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 20px;">
+          <!-- Recent Orders -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Recent Orders</h3>
+              <a href="#orders" class="btn btn-ghost btn-sm" onclick="showSection('orders')">View All</a>
+            </div>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Order #</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody id="recentOrdersTable">
+                  <tr>
+                    <td colspan="5" class="text-center text-muted">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Best Sellers -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Best Sellers (This Month)</h3>
+            </div>
+            <div id="bestSellers" class="best-sellers-list">
+              <div class="text-center text-muted p-4">Loading...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Waiter Performance -->
+        <div class="card mt-4">
+          <div class="card-header">
+            <h3 class="card-title">Waiter Performance (Today)</h3>
+          </div>
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Waiter</th>
+                  <th>Orders</th>
+                  <th>Total Sales</th>
+                </tr>
+              </thead>
+              <tbody id="waiterSalesTable">
+                <tr>
+                  <td colspan="3" class="text-center text-muted">Loading...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Users Section -->
+    <section id="usersSection" class="section">
+      <div class="page-header">
+        <h1 class="page-title">User Management</h1>
+        <button class="btn btn-primary" onclick="openModal('userModal'); resetUserForm();">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          Add User
+        </button>
+      </div>
+      
+      <div class="page-content">
+        <div class="card">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Username</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTable">
+                <tr>
+                  <td colspan="6" class="text-center text-muted">Loading...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section id="categoriesSection" class="section">
+      <div class="page-header">
+        <h1 class="page-title">Categories</h1>
+        <button class="btn btn-primary" onclick="openModal('categoryModal'); resetCategoryForm();">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          Add Category
+        </button>
+      </div>
+      
+      <div class="page-content">
+        <div class="grid grid-3" id="categoriesGrid">
+          <div class="text-center text-muted p-4">Loading...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="productsSection" class="section">
+      <div class="page-header">
+        <h1 class="page-title">Products</h1>
+        <button class="btn btn-primary" onclick="openModal('productModal'); resetProductForm();">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          Add Product
+        </button>
+      </div>
+      
+      <div class="page-content">
+        <div class="card">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="productsTable">
+                <tr>
+                  <td colspan="5" class="text-center text-muted">Loading...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Promo Codes Section -->
+    <section id="promo-codesSection" class="section">
+      <div class="page-header">
+        <h1 class="page-title">Promo Codes</h1>
+        <button class="btn btn-primary" onclick="openModal('promoModal'); resetPromoForm();">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          Add Promo Code
+        </button>
+      </div>
+      
+      <div class="page-content">
+        <div class="card">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Type</th>
+                  <th>Value</th>
+                  <th>Usage</th>
+                  <th>Valid Until</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="promoCodesTable">
+                <tr>
+                  <td colspan="7" class="text-center text-muted">Loading...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Orders Section -->
+    <section id="ordersSection" class="section">
+      <div class="page-header">
+        <h1 class="page-title">Orders</h1>
+        <div class="flex gap-3">
+          <input type="date" id="ordersDateFilter" class="form-input" style="width: auto;" onchange="loadOrders()">
+          <select id="ordersStatusFilter" class="form-select" style="width: auto;" onchange="loadOrders()">
+            <option value="">All Statuses</option>
+            <option value="pending">Pending</option>
+            <option value="preparing">Preparing</option>
+            <option value="ready">Ready</option>
+            <option value="served">Served</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="page-content">
+        <div class="card">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Order #</th>
+                  <th>Table</th>
+                  <th>Items</th>
+                  <th>Total</th>
+                  <th>Waiter</th>
+                  <th>Status</th>
+                  <th>Payment</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTable">
+                <tr>
+                  <td colspan="8" class="text-center text-muted">Loading...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reports Section -->
+    <section id="reportsSection" class="section">
+      <div class="page-header">
+        <h1 class="page-title">Cash Register Reports</h1>
+        <div class="flex gap-3">
+          <input type="date" id="reportStartDate" class="form-input" style="width: auto;">
+          <input type="date" id="reportEndDate" class="form-input" style="width: auto;">
+          <button class="btn btn-primary" onclick="loadReports()">Filter</button>
+        </div>
+      </div>
+      
+      <div class="page-content">
+        <div class="card">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Cashier</th>
+                  <th>Expected</th>
+                  <th>Counted</th>
+                  <th>Difference</th>
+                  <th>Orders</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="reportsTable">
+                <tr>
+                  <td colspan="7" class="text-center text-muted">Select date range and click Filter</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- User Modal -->
+  <div class="modal-overlay" id="userModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="userModalTitle">Add User</h3>
+        <button class="modal-close" onclick="closeModal('userModal')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <form id="userForm" onsubmit="saveUser(event)">
+        <div class="modal-body">
+          <input type="hidden" id="userId">
+          
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="userFormName" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input type="text" id="userFormUsername" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="userFormPassword" class="form-input" placeholder="Leave empty to keep current">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Role</label>
+            <select id="userFormRole" class="form-select" required>
+              <option value="admin">Admin</option>
+              <option value="cashier">Cashier</option>
+              <option value="chef">Chef</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select id="userFormStatus" class="form-select">
+              <option value="true">Active</option>
+              <option value="false">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('userModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save User</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Category Modal -->
+  <div class="modal-overlay" id="categoryModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="categoryModalTitle">Add Category</h3>
+        <button class="modal-close" onclick="closeModal('categoryModal')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <form id="categoryForm" onsubmit="saveCategory(event)">
+        <div class="modal-body">
+          <input type="hidden" id="categoryId">
+          
+          <div class="form-group">
+            <label class="form-label">Category Name</label>
+            <input type="text" id="categoryFormName" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea id="categoryFormDescription" class="form-textarea"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Color</label>
+            <input type="color" id="categoryFormColor" class="form-input" value="#3b82f6" style="height: 50px; padding: 5px;">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('categoryModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Category</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Product Modal -->
+  <div class="modal-overlay" id="productModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="productModalTitle">Add Product</h3>
+        <button class="modal-close" onclick="closeModal('productModal')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <form id="productForm" onsubmit="saveProduct(event)">
+        <div class="modal-body">
+          <input type="hidden" id="productId">
+          
+          <div class="form-group">
+            <label class="form-label">Product Name</label>
+            <input type="text" id="productFormName" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select id="productFormCategory" class="form-select" required>
+              <option value="">Select Category</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Price (DH)</label>
+            <input type="number" id="productFormPrice" class="form-input" step="0.01" min="0" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea id="productFormDescription" class="form-textarea"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Preparation Time (minutes)</label>
+            <input type="number" id="productFormPrepTime" class="form-input" min="1" value="10">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select id="productFormStatus" class="form-select">
+              <option value="true">Available</option>
+              <option value="false">Unavailable</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('productModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Promo Code Modal -->
+  <div class="modal-overlay" id="promoModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="promoModalTitle">Add Promo Code</h3>
+        <button class="modal-close" onclick="closeModal('promoModal')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <form id="promoForm" onsubmit="savePromoCode(event)">
+        <div class="modal-body">
+          <input type="hidden" id="promoId">
+          
+          <div class="form-group">
+            <label class="form-label">Promo Code</label>
+            <input type="text" id="promoFormCode" class="form-input" required placeholder="e.g., SUMMER20">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Discount Type</label>
+            <select id="promoFormType" class="form-select" required onchange="toggleMaxDiscount()">
+              <option value="percentage">Percentage (%)</option>
+              <option value="fixed">Fixed Amount (DH)</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Value</label>
+            <input type="number" id="promoFormValue" class="form-input" step="0.01" min="0" required>
+          </div>
+          
+          <div class="form-group" id="maxDiscountGroup">
+            <label class="form-label">Max Discount (DH) - Optional</label>
+            <input type="number" id="promoFormMaxDiscount" class="form-input" step="0.01" min="0" placeholder="Leave empty for no limit">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Min Order Amount (DH)</label>
+            <input type="number" id="promoFormMinOrder" class="form-input" step="0.01" min="0" value="0">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Usage Limit</label>
+            <input type="number" id="promoFormUsageLimit" class="form-input" min="1" placeholder="Leave empty for unlimited">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Valid Until</label>
+            <input type="date" id="promoFormValidUntil" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select id="promoFormStatus" class="form-select">
+              <option value="true">Active</option>
+              <option value="false">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('promoModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Promo Code</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/js/utils.js"></script>
+  <script src="/admin/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waiter - POS System</title>
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="waiter.css">
+</head>
+<body>
+  <div class="waiter-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>Waiter</h1>
+        <span class="user-name" id="user-name">Loading...</span>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="new-order">
+          <span class="nav-icon">+</span>
+          New Order
+        </button>
+        <button class="nav-item" data-tab="my-orders">
+          <span class="nav-icon">&#x1F4CB;</span>
+          My Orders
+          <span class="badge" id="pending-badge" style="display:none;">0</span>
+        </button>
+        <button class="nav-item" data-tab="ready-orders">
+          <span class="nav-icon">&#x1F514;</span>
+          Ready
+          <span class="badge badge-success" id="ready-badge" style="display:none;">0</span>
+        </button>
+      </nav>
+      
+      <div class="sidebar-stats">
+        <div class="stat-item">
+          <span class="stat-label">Today's Orders</span>
+          <span class="stat-value" id="total-orders">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Total Sales</span>
+          <span class="stat-value" id="total-sales">0 DH</span>
+        </div>
+      </div>
+      
+      <div class="sidebar-footer">
+        <button class="btn btn-outline btn-block" onclick="logout()">Logout</button>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- New Order Tab -->
+      <div class="tab-content active" id="tab-new-order">
+        <div class="order-builder">
+          <!-- Categories and Products -->
+          <div class="products-section">
+            <div class="categories-bar" id="categories-bar">
+              <!-- Categories loaded here -->
+            </div>
+            <div class="products-grid" id="products-grid">
+              <!-- Products loaded here -->
+            </div>
+          </div>
+          
+          <!-- Cart -->
+          <div class="cart-section">
+            <div class="cart-header">
+              <h2>Current Order</h2>
+              <div class="table-selector">
+                <label>Table #</label>
+                <input type="number" id="table-number" min="1" max="100" placeholder="--">
+              </div>
+            </div>
+            
+            <div class="cart-items" id="cart-items">
+              <div class="cart-empty">
+                <p>No items in cart</p>
+              </div>
+            </div>
+            
+            <div class="cart-notes">
+              <label>Order Notes</label>
+              <textarea id="order-notes" placeholder="Special instructions..."></textarea>
+            </div>
+            
+            <div class="cart-footer">
+              <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total">0 DH</span>
+              </div>
+              <button class="btn btn-primary btn-block" onclick="submitOrder()" id="submit-order-btn">
+                Send to Kitchen
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- My Orders Tab -->
+      <div class="tab-content" id="tab-my-orders">
+        <div class="orders-header">
+          <h2>My Orders Today</h2>
+          <button class="btn btn-sm" onclick="loadMyOrders()">Refresh</button>
+        </div>
+        <div class="orders-list" id="my-orders-list">
+          <!-- Orders loaded here -->
+        </div>
+      </div>
+      
+      <!-- Ready Orders Tab -->
+      <div class="tab-content" id="tab-ready-orders">
+        <div class="orders-header">
+          <h2>Orders Ready for Service</h2>
+          <button class="btn btn-sm" onclick="loadReadyOrders()">Refresh</button>
+        </div>
+        <div class="orders-list" id="ready-orders-list">
+          <!-- Ready orders loaded here -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Item Notes Modal -->
+  <div class="modal" id="item-notes-modal">
+    <div class="modal-content modal-sm">
+      <div class="modal-header">
+        <h3>Add Notes</h3>
+        <button class="modal-close" onclick="closeItemNotesModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="item-notes-product-name"></p>
+        <textarea id="item-notes-input" placeholder="Special instructions for this item..."></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeItemNotesModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveItemNotes()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/utils.js"></script>
+  <script src="waiter.js"></script>
+</body>
+</html>

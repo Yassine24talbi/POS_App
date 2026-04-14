@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kitchen Display - POS System</title>
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="chef.css">
+  <link rel="icon" href="../iconApp.png" type="image/x-icon">
+</head>
+<body class="chef-body">
+  <header class="chef-header">
+    <div class="header-left">
+      <h1>Kitchen Display</h1>
+      <div class="stats-bar">
+        <div class="stat pending">
+          <span class="stat-label">Pending</span>
+          <span class="stat-value" id="pending-count">0</span>
+        </div>
+        <div class="stat preparing">
+          <span class="stat-label">Preparing</span>
+          <span class="stat-value" id="preparing-count">0</span>
+        </div>
+        <div class="stat completed">
+          <span class="stat-label">Completed</span>
+          <span class="stat-value" id="completed-count">0</span>
+        </div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="current-time" id="current-time"></span>
+      <span class="user-name" id="user-name">Chef</span>
+      <button class="btn btn-outline" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="kitchen-main">
+    <div class="orders-section">
+      <div class="section-header">
+        <h2>Active Orders</h2>
+        <button class="btn btn-sm" onclick="refreshOrders()">Refresh</button>
+      </div>
+      
+      <div class="orders-grid" id="orders-grid">
+        <!-- Orders will be loaded here -->
+      </div>
+    </div>
+    
+    <div class="completed-section">
+      <div class="section-header">
+        <h2>Recently Completed</h2>
+      </div>
+      <div class="completed-list" id="completed-list">
+        <!-- Completed orders will be listed here -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Audio for new order notification -->
+  <audio id="notification-sound" preload="auto">
+    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2teleRktU6Ljx6N/OCYpWp" type="audio/wav">
+  </audio>
+
+  <script src="/js/utils.js"></script>
+  <script src="chef.js"></script>
+</body>
+</html>
