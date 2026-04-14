@@ -60,16 +60,13 @@
   font-family: 'Courier New', Courier, monospace;
   font-weight: 900;
   font-size: 14px;
+  color: white;
   background-color: rgba(0, 0, 0, 0.2);
   border: white 1px solid;
   border-radius: 30px;
   padding: 5px 15px;
   transition: all 0.2s ease;
   backdrop-filter: blur(10px);
-  cursor: pointer;
-}
-#download .a {
-  color: white;
 }
 body {
   font-family: var(--font-sans);

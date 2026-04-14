@@ -1,8 +1,0 @@
-directories:
-  output: dist
-  buildResources: public
-appId: RestaurantPOSApp
-productName: Restaurant POS App
-icon: public/iconApp
-files: []
-electronVersion: 41.2.0
