@@ -134,7 +134,7 @@ function filterByCategory(categoryId) {
 }
 
 // Add to cart
-function addToCart(productId) {
+function addToCart(productId, qnt) {
   const product = products.find(p => p._id === productId);
   if (!product) return;
 
@@ -147,7 +147,7 @@ function addToCart(productId) {
       productId: product._id,
       productName: product.name,
       price: product.price,
-      quantity: 1
+      quantity: qnt || 1,
     });
   }
 
@@ -179,9 +179,24 @@ function removeFromCart(productId) {
 function clearCart() {
   cart = [];
   appliedPromo = null;
+  document.getElementById('tableInputSection').children[0].value = '';  
   document.getElementById('promoCodeInput').value = '';
   document.getElementById('promoApplied').classList.add('hidden');
   document.getElementById('discountRow').classList.add('hidden');
+  document.getElementById('completeOrderBtn').classList.add('active');
+  document.getElementById('paydlaterOrder').classList.remove('active');
+  const el1 = document.getElementById('tableInputSection');
+  const el2 = document.getElementById('cartItems');
+  const ordrtype = document.getElementById('orderTypeSelector');
+  const laterbtn = document.getElementById('laterbtn');
+  laterbtn.disabled = false;
+  laterbtn.style.textDecoration = "none";
+  ordrtype.style.pointerEvents = 'auto';
+  ordrtype.style.opacity = '1';
+  el1.style.pointerEvents = 'auto';
+  el2.style.pointerEvents = 'auto';
+  el1.style.opacity = '1';
+  el2.style.opacity = '1';
   renderCart();
 }
 
@@ -203,7 +218,7 @@ function renderCart() {
     `;
     clearBtn.disabled = true;
     completeBtn.disabled = true;
-    updateTotals();
+    updateTotals('completeOrderBtn');
     return;
   }
 
@@ -226,11 +241,11 @@ function renderCart() {
     </div>
   `).join('');
 
-  updateTotals();
+  updateTotals('completeOrderBtn');
 }
 
 // Update totals
-function updateTotals() {
+function updateTotals(activeButtonId) {
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   let discount = 0;
 
@@ -248,7 +263,7 @@ function updateTotals() {
   document.getElementById('total').textContent = formatCurrency(total);
 
   // Update complete button state
-  const completeBtn = document.getElementById('completeOrderBtn');
+  const completeBtn = document.getElementById(activeButtonId);
   if (cart.length > 0) {
     if (paymentMethod === 'cash') {
       const paidAmount = parseFloat(document.getElementById('paidAmount').value) || 0;
@@ -278,9 +293,14 @@ function setOrderType(type) {
   const tableSection = document.getElementById('tableInputSection');
   if (type === 'dine-in') {
     tableSection.style.display = 'block';
+    document.getElementById('laterbtn').disabled = false;
+    document.getElementById('laterbtn').style.textDecoration = "none";
   } else {
     tableSection.style.display = 'none';
+    document.getElementById('laterbtn').disabled = true;
+    document.getElementById('laterbtn').style.textDecoration = "line-through";
     document.getElementById('tableNumber').value = '';
+    setPaymentMethod('cash');
   }
 }
 
@@ -299,19 +319,22 @@ function setPaymentMethod(method) {
   const cashInput = document.getElementById('cashInputSection');
   if (method === 'cash') {
     cashInput.style.display = 'block';
-  } else {
+  } else if (method === 'later') {
     cashInput.style.display = 'none';
+    document.getElementById('paidAmount').value = '';
+  }else{
+     cashInput.style.display = 'none';
     document.getElementById('paidAmount').value = '';
   }
 
-  updateTotals();
+  updateTotals('completeOrderBtn');
 }
 
 // Set quick cash amount
 function setQuickCash(amount) {
   document.getElementById('paidAmount').value = amount;
   calculateChange();
-  updateTotals();
+  updateTotals('completeOrderBtn');
 }
 
 // Set exact amount
@@ -321,7 +344,7 @@ function setExactAmount() {
   const total = subtotal - discount;
   document.getElementById('paidAmount').value = total.toFixed(2);
   calculateChange();
-  updateTotals();
+  updateTotals('completeOrderBtn');
 }
 
 // Calculate change
@@ -362,7 +385,7 @@ async function applyPromoCode() {
     document.getElementById('promoDiscount').textContent = `-${formatCurrency(appliedPromo.discount)}`;
     document.getElementById('promoCodeInput').value = '';
 
-    updateTotals();
+    updateTotals('completeOrderBtn');
     showToast('Promo code applied!', 'success');
   } catch (error) {
     showToast(error.message, 'error');
@@ -374,7 +397,7 @@ function removePromoCode() {
   appliedPromo = null;
   document.getElementById('promoApplied').classList.add('hidden');
   document.getElementById('promoCodeInput').value = '';
-  updateTotals();
+  updateTotals('completeOrderBtn');
 }
 
 // Complete order
@@ -418,6 +441,8 @@ async function completeOrder() {
     orderType,
     paymentMethod,
     paidAmount,
+    notes: '',
+    waiterId: null,
   };
 
   try {
@@ -425,12 +450,13 @@ async function completeOrder() {
       method: 'POST',
       body: JSON.stringify(orderData)
     });
-
+    
     lastCompletedOrder = {
       id: result.order.id,
       orderNumber: result.order.orderNumber,
       total: result.order.total,
-      changeAmount: result.order.changeAmount
+      changeAmount: result.order.changeAmount,
+      isPaid: result.order.isPaid
     };
 
     // Show success modal
@@ -466,7 +492,7 @@ function closeOrderComplete() {
   document.getElementById('tableNumber').value = '';
   document.getElementById('paidAmount').value = '';
   setOrderType('dine-in');
-  setPaymentMethod('cash');
+  setPaymentMethod('later');
 }
 
 // Calculate cash total for close register
@@ -549,3 +575,131 @@ async function closeRegister() {
     showToast(error.message, 'error');
   }
 }
+
+async function todayOrders() {
+  try {
+    const result = await apiRequest('/api/cashier/today-stats');
+    const orders = result.ordersList;
+    const ordersList = document.getElementById('ordersList');
+    ordersList.innerHTML = '';
+
+    if (orders.length === 0) {
+      ordersList.innerHTML = '<li>No orders unpaid today</li>';
+    } else {
+      orders.forEach(order => {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `<strong>Order #<label id="numorder">${order.orderNumber}</label>:</strong> <span>${order.isPaid ? "Paid" : "Unpaid"}</span>
+        <button class = "btn-valid" onclick="payorder(this)">Pay</button>`;
+        sessionStorage.setItem(`order_${order.orderNumber}`, JSON.stringify(order));
+        ordersList.appendChild(listItem);
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching today's orders:", error);
+  }
+};
+// showing order at cart to pay it
+async function payorder(btn){
+  clearCart();
+  setPaymentMethod('cash');
+  setOrderType('dine-in');
+  document.getElementById('completeOrderBtn').classList.remove('active');
+  document.getElementById('paydlaterOrder').classList.add('active');
+  document.getElementById('paydlaterOrder').disabled = false;
+  const home = btn.parentElement;
+  const orderNumber = home.querySelector('#numorder').textContent;
+  const order = await JSON.parse(sessionStorage.getItem(`order_${orderNumber}`));
+  sessionStorage.clear();
+  sessionStorage.setItem(`order`, JSON.stringify(order));
+  if (order.orderNumber == orderNumber) {
+    showToast("Order Back", 'success');
+    document.getElementById('tableInputSection').children[0].value = order.tableNumber;
+    const el1 = document.getElementById('tableInputSection');
+    const el2 = document.getElementById('cartItems');
+    const ordrtype = document.getElementById('orderTypeSelector');
+    const laterbtn = document.getElementById('laterbtn');
+    laterbtn.disabled = true;
+    laterbtn.style.textDecoration = "line-through";
+    ordrtype.style.pointerEvents = 'none';
+    ordrtype.style.opacity = '0.5';
+    el1.style.pointerEvents = 'none';
+    el2.style.pointerEvents = 'none';
+    el1.style.opacity = '0.5';
+    el2.style.opacity = '0.5';
+    order.items.forEach(item => addToCart(item.product,item.quantity));
+    closeModal('ordersTodayModal');
+  } else {
+    showToast("Order not found", 'error');
+    order._id = null;
+  }
+  return order._id;
+}
+
+// pay order that was added to cart from today orders list
+async function paydlaterOrder(){
+  const order = await JSON.parse(sessionStorage.getItem(`order`));
+  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const discount = appliedPromo ? appliedPromo.discount : 0;
+  const total = subtotal - discount;
+  const tableNumber = document.getElementById('tableNumber').value;
+  const paidAmount = parseFloat(document.getElementById('paidAmount').value) || 0;
+  if (paymentMethod === 'cash' && paidAmount < total ) {
+    showToast('Insufficient payment amount', 'error');
+    return;
+  } else {
+    const orderData = {
+    items: cart.map(item => ({
+      product: item.productId,
+      productName: item.productName,
+      quantity: item.quantity,
+      price: item.price
+    })),
+    subtotal,
+    promoCodeId: appliedPromo?.id,
+    promoCodeUsed: appliedPromo?.code,
+    discount,
+    orderNumber : order.orderNumber,
+    total,
+    tableNumber: tableNumber || null,
+    orderType,
+    paymentMethod,
+    paidAmount : paidAmount || total,
+  };
+
+  try {
+    const result = await apiRequest(`/api/cashier/orderpay/${order._id}`, {
+      method: 'PUT',
+      body: JSON.stringify(orderData)
+    });
+    
+    lastCompletedOrder = {
+      id: result.order.id,
+      orderNumber: result.order.orderNumber,
+      total: result.order.total,
+      changeAmount: result.order.changeAmount,
+      isPaid: result.order.isPaid,
+    };
+    // Show success modal
+    document.getElementById('completedOrderNumber').textContent = `#${result.order.orderNumber}`;
+    document.getElementById('completedOrderChange').textContent = `Change: ${formatCurrency(result.order.changeAmount)}`;
+    openModal('orderCompleteModal');
+
+    // Setup print button
+    document.getElementById('printReceiptBtn').onclick = async () => {
+      try {
+        const order = await apiRequest(`/api/cashier/orders/${lastCompletedOrder.id}`);
+        printReceipt(order);
+      } catch (error) {
+        showToast('Failed to print receipt', 'error');
+      }
+    };
+
+    // Update stats
+    loadTodayStats();
+
+    showToast('Order completed successfully!', 'success');
+  } catch (error) {
+    showToast(error.message, 'error');
+  }
+  }
+};

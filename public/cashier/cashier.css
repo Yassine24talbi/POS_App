@@ -166,7 +166,48 @@
   font-weight: 700;
   color: var(--accent-success);
 }
+/* orders list */
+.orders-list{
+  list-style: none;
+}
+.orders-list li{
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 5px 10px;
+  margin: 5px 0;
+  display: grid;
+  grid-template-columns: 35% auto auto;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+}
+.orders-list li span{
+  padding: 8px 15px;
+  background-color: rgba(255, 123, 0, 0.5);
+  color: white;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+}
+.orders-list li button{
+  padding: 8px 15px;
+  background-color: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  
+}
 
+/* buttons for order complete */
+button.btn-lg{
+  display: none;
+}
+button.btn-lg.active{
+  display: block;
+}
 /* Cart Section */
 .cart-section {
   width: 380px;

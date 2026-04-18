@@ -219,6 +219,7 @@ function generateReceiptHTML(order) {
         <p style="margin:2px 0;">Date: ${formatDate(date)}</p>
         ${order.tableNumber ? `<p style="margin:2px 0;">Table: ${order.tableNumber}</p>` : ''}
         <p style="margin:2px 0;">Type: ${order.orderType === 'dine-in' ? 'Dine In' : 'Takeaway'}</p>
+        <p style="margin:2px 0;">Status: ${order.isPaid ? 'Paid' : 'Pending'}</p>
       </div>
       
       <table style="width:100%;border-collapse:collapse;">

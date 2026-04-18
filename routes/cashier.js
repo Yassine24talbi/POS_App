@@ -115,8 +115,8 @@ router.post('/orders', async (req, res) => {
       cashier: req.user._id,
       paymentMethod: paymentMethod || 'cash',
       paidAmount: paidAmount || total,
-      changeAmount: (paidAmount || total) - total,
-      isPaid: true,
+      changeAmount: paidAmount - total || paymentMethod !== 'later' ? 0 : null,
+      isPaid: paymentMethod === 'later' ? false : true,
       notes,
       status: 'pending'
     });
@@ -130,7 +130,8 @@ router.post('/orders', async (req, res) => {
         orderType: orderType || 'dine-in',
         orderNumber: order.orderNumber,
         total: order.total,
-        changeAmount: order.changeAmount
+        changeAmount: order.changeAmount,
+        isPaid: order.isPaid,
       }
     });
   } catch (error) {
@@ -164,15 +165,20 @@ router.get('/today-stats', async (req, res) => {
     today.setHours(0, 0, 0, 0);
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-
+  
     const orderCount = await Order.countDocuments({
       cashier: req.user._id,
       createdAt: { $gte: today, $lt: tomorrow },
       status: { $ne: 'cancelled' }
     });
+    const ordersList = await Order.find({
+      createdAt: { $gte: today, $lt: tomorrow },
+      status: { $ne: 'cancelled' },
+      isPaid: false,
+    });
 
     // Return only order count, NOT the total amount
-    res.json({ orderCount });
+    res.json({ orderCount, ordersList });
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch stats.' });
   }
@@ -269,6 +275,61 @@ router.get('/pending-orders', async (req, res) => {
     res.json(orders);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch pending orders.' });
+  }
+});
+router.put('/orderpay/:id', async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const { 
+    items, 
+    subtotal, 
+    promoCodeId, 
+    discount, 
+    orderNumber,
+    total, 
+    tableNumber, 
+    orderType, 
+    paymentMethod,
+    paidAmount,
+    notes,
+    waiterId,
+    } = req.body;
+
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found.' });
+    }
+
+    order.items,
+    order.subtotal,
+    order.promoCode= promoCodeId,
+    order.discount= discount || 0,
+    order.total= total,
+    order.orderNumber= orderNumber,
+    order.orderType= orderType || 'dine-in',
+    order.waiter= waiterId,
+    order.paymentMethod= paymentMethod || 'cash',
+    order.paidAmount= paidAmount || null,
+    order.changeAmount= paidAmount - total,
+    order.isPaid= paymentMethod === 'later' ? false : true,
+    order.status= 'completed';
+
+    await order.save();
+
+    res.status(201).json({ 
+      message: 'Order created successfully.',
+      order: {
+        id: order._id,
+        orderType: orderType || 'dine-in',
+        orderNumber: order.orderNumber,
+        total: order.total,
+        changeAmount: order.changeAmount ,
+        isPaid: order.isPaid,
+      }
+    });
+  } catch (error) {
+    console.error('Update order payment error:', error);
+    res.status(500).json({ error: 'Failed to update order payment.' });
   }
 });
 

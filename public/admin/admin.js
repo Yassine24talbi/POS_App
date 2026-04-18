@@ -116,7 +116,7 @@ async function loadDashboard() {
           <td>#${order.orderNumber}</td>
           <td>${order.items.length} items</td>
           <td>${formatCurrency(order.total)}</td>
-          <td><span class="badge status-${order.status}">${order.status}</span></td>
+          <td><span class="badge status">${order.isPaid ? 'Paid' : 'Pending'}</span></td>
           <td>${formatTime(order.createdAt)}</td>
         </tr>
       `).join('');
@@ -667,7 +667,7 @@ function renderOrdersTable(orders) {
       <td>${order.items.length} items</td>
       <td>${formatCurrency(order.total)}</td>
       <td>${order.waiter?.name || '-'}</td>
-      <td><span class="badge status-${order.status}">${order.status}</span></td>
+      <td><span class="badge status">${order.isPaid ? 'Paid' : 'Pending'}</span></td>
       <td><span class="badge badge-secondary">${order.paymentMethod}</span></td>
       <td>${formatTime(order.createdAt)}</td>
     </tr>

@@ -26,7 +26,8 @@ router.get('/dashboard', async (req, res) => {
     // Today's orders
     const todayOrders = await Order.find({
       createdAt: { $gte: today, $lt: tomorrow },
-      status: { $ne: 'cancelled' }
+      status: { $ne: 'cancelled' },
+      isPaid: true,
     });
 
     const todaySales = todayOrders.reduce((sum, order) => sum + order.total, 0);
