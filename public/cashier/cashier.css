@@ -669,6 +669,73 @@ button.btn-lg.active{
   color: var(--text-secondary);
 }
 
+/* Cashier Keyboard Modal */
+.cashier-keyboard-overlay {
+  align-items: flex-end;
+  padding: 20px;
+  z-index: 1100;
+}
+
+.cashier-keyboard-modal {
+  width: min(640px, 100%);
+  max-width: 640px;
+}
+
+.cashier-keyboard-preview {
+  min-height: 48px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 22px;
+  font-weight: 700;
+  text-align: right;
+  word-break: break-word;
+}
+
+.cashier-keyboard {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(42px, 1fr));
+  gap: 8px;
+}
+
+.cashier-key {
+  min-height: 46px;
+  padding: 0 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.cashier-key:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent-primary);
+}
+
+.cashier-key.wide {
+  grid-column: span 2;
+}
+
+.cashier-key.extra-wide {
+  grid-column: span 4;
+}
+
+.cashier-key.numeric {
+  min-height: 58px;
+  font-size: 22px;
+}
+
+.cashier-keyboard.numeric {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .cashier-layout {
@@ -716,5 +783,18 @@ button.btn-lg.active{
   .cart-section {
     height: auto;
     flex: 1;
+  }
+
+  .cashier-keyboard-overlay {
+    padding: 8px;
+  }
+
+  .cashier-keyboard {
+    grid-template-columns: repeat(5, minmax(38px, 1fr));
+  }
+
+  .cashier-key {
+    min-height: 42px;
+    padding: 0 6px;
   }
 }

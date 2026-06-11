@@ -13,6 +13,7 @@ let orderType = 'dine-in';
 let paymentMethod = 'cash';
 let appliedPromo = null;
 let lastCompletedOrder = null;
+let activeCashierKeyboardInput = null;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -24,7 +25,182 @@ document.addEventListener('DOMContentLoaded', () => {
   loadCategories();
   loadProducts();
   loadTodayStats();
+  initializeCashierKeyboard();
 });
+
+// Cashier on-screen keyboard
+function initializeCashierKeyboard() {
+  document.addEventListener('focusin', (event) => {
+    const field = event.target;
+    if (!isCashierKeyboardField(field)) return;
+
+    openCashierKeyboard(field);
+  });
+}
+
+function isCashierKeyboardField(field) {
+  if (!field.matches('input.form-input, textarea.form-textarea')) return false;
+  if (field.closest('#cashierKeyboardModal')) return false;
+  if (field.disabled || field.readOnly || field.type === 'hidden') return false;
+
+  return Boolean(field.closest('.cashier-layout') || field.closest('.modal-overlay'));
+}
+
+function openCashierKeyboard(field) {
+  activeCashierKeyboardInput = field;
+
+  const modal = document.getElementById('cashierKeyboardModal');
+  const title = document.getElementById('cashierKeyboardTitle');
+  const label = field.closest('.form-group')?.querySelector('label')?.textContent
+    || field.closest('.cash-input')?.querySelector('label')?.textContent
+    || field.placeholder
+    || 'Enter Value';
+
+  title.textContent = label;
+  renderCashierKeyboard(field);
+  updateCashierKeyboardPreview();
+  modal.classList.add('active');
+}
+
+function closeCashierKeyboard() {
+  const modal = document.getElementById('cashierKeyboardModal');
+  if (modal) {
+    modal.classList.remove('active');
+  }
+  activeCashierKeyboardInput = null;
+}
+
+function renderCashierKeyboard(field) {
+  const keyboard = document.getElementById('cashierKeyboard');
+  const isNumeric = field.type === 'number';
+  const numericKeys = field.step === '0.01' || field.step === 'any'
+    ? ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0', '.']
+    : ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0'];
+  const keys = isNumeric
+    ? numericKeys
+    : ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+       'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',
+       'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L',
+       'Z', 'X', 'C', 'V', 'B', 'N', 'M', '-', '.', ' '];
+
+  keyboard.classList.toggle('numeric', isNumeric);
+  keyboard.innerHTML = keys.map((key) => {
+    const label = key === ' ' ? 'Space' : key;
+    const sizeClass = key === ' ' ? ' extra-wide' : '';
+    const numericClass = isNumeric ? ' numeric' : '';
+    return `<button type="button" class="cashier-key${numericClass}${sizeClass}" data-key="${escapeKeyboardKey(key)}">${label}</button>`;
+  }).join('');
+
+  keyboard.querySelectorAll('.cashier-key').forEach((button) => {
+    button.addEventListener('mousedown', (event) => event.preventDefault());
+    button.addEventListener('click', () => cashierKeyboardPress(button.dataset.key));
+  });
+}
+
+function escapeKeyboardKey(key) {
+  return key === ' ' ? '__space__' : key;
+}
+
+function normalizeKeyboardKey(key) {
+  return key === '__space__' ? ' ' : key;
+}
+
+function cashierKeyboardPress(rawKey) {
+  if (!activeCashierKeyboardInput) return;
+
+  const key = normalizeKeyboardKey(rawKey);
+  const field = activeCashierKeyboardInput;
+  const { start, end } = getCashierKeyboardSelection(field);
+  let nextValue = `${field.value.slice(0, start)}${key}${field.value.slice(end)}`;
+
+  if (field.type === 'number') {
+    nextValue = sanitizeNumericKeyboardValue(nextValue, field);
+  }
+
+  setCashierKeyboardValue(nextValue, start + key.length);
+}
+
+function cashierKeyboardBackspace() {
+  if (!activeCashierKeyboardInput) return;
+
+  const field = activeCashierKeyboardInput;
+  const { start, end } = getCashierKeyboardSelection(field);
+
+  if (start !== end) {
+    setCashierKeyboardValue(`${field.value.slice(0, start)}${field.value.slice(end)}`, start);
+    return;
+  }
+
+  if (start > 0) {
+    setCashierKeyboardValue(`${field.value.slice(0, start - 1)}${field.value.slice(start)}`, start - 1);
+  }
+}
+
+function cashierKeyboardClear() {
+  if (!activeCashierKeyboardInput) return;
+  setCashierKeyboardValue('', 0);
+}
+
+function setCashierKeyboardValue(value, cursorPosition) {
+  const field = activeCashierKeyboardInput;
+  field.value = value;
+  field.dispatchEvent(new Event('input', { bubbles: true }));
+  field.dispatchEvent(new Event('change', { bubbles: true }));
+  updateCashierKeyboardPreview();
+
+  requestAnimationFrame(() => {
+    field.focus({ preventScroll: true });
+    if (canUseTextSelection(field)) {
+      const position = Math.min(cursorPosition, field.value.length);
+      field.setSelectionRange(position, position);
+    }
+  });
+}
+
+function getCashierKeyboardSelection(field) {
+  if (!canUseTextSelection(field)) {
+    const position = field.value.length;
+    return { start: position, end: position };
+  }
+
+  return {
+    start: field.selectionStart ?? field.value.length,
+    end: field.selectionEnd ?? field.value.length
+  };
+}
+
+function canUseTextSelection(field) {
+  return field.tagName === 'TEXTAREA' || ['text', 'search', 'tel', 'url', 'password'].includes(field.type);
+}
+
+function sanitizeNumericKeyboardValue(value, field) {
+  const allowDecimal = field.step === '0.01' || field.step === 'any';
+  const allowNegative = !field.min || Number(field.min) < 0;
+  let sanitized = '';
+  let hasDecimal = false;
+  let hasMinus = false;
+
+  for (const char of value) {
+    if (/\d/.test(char)) {
+      sanitized += char;
+    } else if (char === '.' && allowDecimal && !hasDecimal) {
+      sanitized += char;
+      hasDecimal = true;
+    } else if (char === '-' && allowNegative && !hasMinus && sanitized.length === 0) {
+      sanitized += char;
+      hasMinus = true;
+    }
+  }
+
+  return sanitized;
+}
+
+function updateCashierKeyboardPreview() {
+  const preview = document.getElementById('cashierKeyboardPreview');
+  if (!preview || !activeCashierKeyboardInput) return;
+
+  preview.textContent = activeCashierKeyboardInput.value || activeCashierKeyboardInput.placeholder || '';
+}
 
 // Load categories
 async function loadCategories() {
